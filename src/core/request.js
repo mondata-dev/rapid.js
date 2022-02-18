@@ -58,7 +58,17 @@ class Request extends Routes {
     }
 
     return new Promise((resolve, reject) => {
-      this.api[type].call(this, this.sanitizeUrl(url), ...this.parseRequestData(type))
+
+      const sanUrl = this.sanitizeUrl(url);
+      const reqData = this.parseRequestData(type);
+
+      // Clear now to make it a bit more thread-safe!
+      // Otherwise it is impossible to send two requests
+      // in parallel that don't interfere with each other
+      this.resetRequestData();
+      this.resetURLParams();
+
+      this.api[type].call(this, sanUrl, ...reqData)
         .then((response) => {
           this.afterRequest(response);
 
