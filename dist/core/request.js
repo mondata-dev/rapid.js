@@ -83,7 +83,13 @@ var Request = function (_Routes) {
       return new Promise(function (resolve, reject) {
         var _api$type;
 
-        (_api$type = _this2.api[type]).call.apply(_api$type, [_this2, _this2.sanitizeUrl(url)].concat(_toConsumableArray(_this2.parseRequestData(type)))).then(function (response) {
+        var sanUrl = _this2.sanitizeUrl(url);
+        var reqData = _this2.parseRequestData(type);
+
+        _this2.resetRequestData();
+        _this2.resetURLParams();
+
+        (_api$type = _this2.api[type]).call.apply(_api$type, [_this2, sanUrl].concat(_toConsumableArray(reqData))).then(function (response) {
           _this2.afterRequest(response);
 
           resolve(response);
